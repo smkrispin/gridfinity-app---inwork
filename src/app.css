@@ -1,0 +1,90 @@
+/* src/App.css */
+
+/* 1. The "Clean Slate" */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #1a1a1e; /* Dark slate background */
+}
+
+/* 2. The Full-Screen Viewport */
+.viewport-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* 3. The Floating Control Panel */
+.control-panel {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+  width: 300px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.85); /* Glass effect */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.control-panel h1 {
+  margin: 0 0 8px 0;
+  font-size: 1.4rem;
+  color: #111;
+  letter-spacing: -0.5px;
+}
+
+.control-panel p {
+  margin: 0 0 20px 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* 4. Inputs & Buttons */
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+input[type="range"] {
+  width: 100%;
+  cursor: pointer;
+}
+
+.export-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #007aff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s, background-color 0.2s;
+}
+
+.export-button:hover {
+  background-color: #0063d1;
+}
+
+.export-button:active {
+  transform: scale(0.98);
+}

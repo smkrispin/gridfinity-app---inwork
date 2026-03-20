@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+.yarn/
+yarn-error.log
+
+# Build outputs
+dist/
+build/
+*.local
+
+# CAD Exports
+*.stl
+*.step
+*.obj
+
+# OS files
+.DS_Store
+Thumbs.db

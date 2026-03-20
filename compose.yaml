@@ -1,0 +1,10 @@
+services:
+  gridfinity-forge:
+    build: .
+    container_name: gridfinity-app
+    ports:
+      - "4444:80"
+    # If you were using volumes for dev, comment them out for this build
+    # volumes:
+    #   - .:/usr/src/app
+    restart: always
