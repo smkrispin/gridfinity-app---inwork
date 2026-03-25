@@ -1,7 +1,0 @@
-services:
-  gridfinity-forge:
-    build: .
-    container_name: gridfinity-app
-    ports:
-      - "4444:80"
-    restart: always
