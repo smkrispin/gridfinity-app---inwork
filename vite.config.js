@@ -1,14 +1,17 @@
-import { defineConfig } from "vite";
-import reactPlugin from "@vitejs/plugin-react";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  base: "/gridfinity-app---inwork/", // <--- Add this line
-  plugins: [reactPlugin()],
+  plugins: [react()],
+  
+  // This tells Vite to build the worker as a modern ES Module
+  // which prevents it from trying to use 'window' or 'document'
+  worker: {
+    format: 'es',
+  },
+
   build: {
-    outDir: "build",
-  },
-  server: {
-    port: 4444,
-  },
+    outDir: 'build', // Ensures it matches your Docker COPY command
+    assetsInlineLimit: 0, // Keeps WASM and Worker as separate files
+  }
 });

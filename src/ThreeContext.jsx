@@ -13,24 +13,31 @@ import * as THREE from "three";
 THREE.Object3D.DEFAULT_UP.set(0, 0, 1);
 
 export default function ThreeContext({ children, ...props }) {
-  const dpr = Math.min(window.devicePixelRatio, 2);
+  // Use the system dpr but capped at 2 for performance
+  const dpr = Math.min(typeof window !== 'undefined' ? window.devicePixelRatio : 1, 2);
 
   return (
     <Suspense fallback={null}>
       <Canvas
         shadows
-        orthographic // Isometric projection
-        // Change "demand" to "always" for maximum smoothness during rotation
+        orthographic 
         frameloop="always"
-        // Force 1:1 pixel mapping. This is the single biggest FPS boost.
-        dpr={1}
-        // Tell the browser to use the dedicated GPU if available
+        dpr={dpr} // Restored to dynamic dpr for clarity on high-res screens
+        
+        // --- THE FIX FOR GLITCHY EDGES ---
+        raycaster={{ 
+          params: { 
+            Line: { threshold: 3 }, // Makes edges "magnetic" within 3 units
+            Mesh: {} 
+          } 
+        }}
+        
         gl={{
           antialias: true,
           powerPreference: "high-performance",
           preserveDrawingBuffer: true,
         }}
-        performance={{ min: 0.5 }} // Allows scaling down quality if FPS drops
+        performance={{ min: 0.5 }}
         style={{
           width: "100%",
           height: "100%",
@@ -39,7 +46,7 @@ export default function ThreeContext({ children, ...props }) {
         camera={{
           position: [150, -150, 150],
           zoom: 8,
-          up: [0, 0, 1], // Explicit Camera Up
+          up: [0, 0, 1],
           near: -1000,
           far: 2000,
         }}
@@ -68,11 +75,10 @@ export default function ThreeContext({ children, ...props }) {
         <ambientLight intensity={1.5} />
         <pointLight position={[100, 100, 100]} intensity={2} />
 
-        {/* OrbitControls MUST have the same UP vector as the camera */}
         <OrbitControls
           makeDefault
           up={[0, 0, 1]}
-          enableDamping={false} // Cleaner snapping for CAD
+          enableDamping={false} 
         />
 
         {children}

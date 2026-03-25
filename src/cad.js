@@ -1,9 +1,8 @@
 import { drawRoundedRectangle } from "replicad";
 
 // The replicad code! Not much there!
-export function drawBox(thickness) {
-  return drawRoundedRectangle(30, 50)
+export function drawBox(thickness, width) {
+  return drawRoundedRectangle(30, 50, 4)
     .sketchOnPlane()
-    .extrude(20)
-    .shell(thickness, (f) => f.inPlane("XY", 20));
+    .extrude(thickness * 7)
 }
