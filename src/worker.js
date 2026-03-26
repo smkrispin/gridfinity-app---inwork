@@ -16,7 +16,7 @@ const started = init();
 
 const createMesh = async (params) => {
   await started;
-  const shape = drawBox(params.thickness);
+  const shape = drawBox(params);
   return {
     faces: shape.mesh(),
     edges: shape.meshEdges(),
@@ -26,38 +26,51 @@ const createMesh = async (params) => {
 
 const measureElement = async (params, type, index) => {
   await started;
-  const shape = drawBox(params.thickness);
+  const shape = drawBox(params);
   
   if (type === "face") {
     const face = shape.faces[index];
     if (!face) return null;
     
-    let radiusValue = null;
-    if (face.geomType === "CYLINDRE") {
-      const circularEdge = face.edges.find(e => e.geomType === "CIRCLE");
-      if (circularEdge) {
-        radiusValue = (Math.max(circularEdge.boundingBox.width, circularEdge.boundingBox.height) / 2).toFixed(2);
-      }
-    }
-    return { type: face.geomType, area: measureArea(face).toFixed(2), radius: radiusValue };
+    return { 
+      index, // Renamed from faceIndex to index
+      type: face.geomType,
+      area: measureArea(face).toFixed(2), 
+      center: face.center.toTuple().map(v => v.toFixed(2)), 
+      normal: face.normalAt().toTuple().map(v => v.toFixed(2)),
+      radius: face.geomType === "CYLINDRE" ? 
+        Math.max(face.edges.find(e => e.geomType === "CIRCLE")?.boundingBox.width || 0).toFixed(2) : null
+    };
   }
 
   if (type === "edge") {
     const edge = shape.edges[index];
     if (!edge) return null;
-    let edgeRadius = edge.geomType === "CIRCLE" ? (Math.max(edge.boundingBox.width, edge.boundingBox.height) / 2).toFixed(2) : null;
-    return { type: edge.geomType, length: edge.length.toFixed(2), radius: edgeRadius };
+
+    const centerArr = edge.pointAt(0.5).toTuple(); 
+    const tangentArr = edge.tangentAt(0.5).toTuple(); 
+
+    let edgeDim = edge.geomType === "CIRCLE" 
+      ? Math.max(edge.boundingBox.width, edge.boundingBox.height).toFixed(2) 
+      : null;
+
+    return { 
+      index, // Standardized as index
+      type: edge.geomType, 
+      length: edge.length.toFixed(2),
+      radius: edgeDim,
+      center: centerArr.map(v => v.toFixed(2)), 
+      direction: tangentArr.map(v => v.toFixed(2)) 
+    };
   }
   return null;
 };
 
-// THE FIX: Explicitly measure distance between two CAD entities
 const getDistance = async (params, type, index1, index2) => {
   await started;
-  const shape = drawBox(params.thickness);
+  const shape = drawBox(params);
   const el1 = type === "face" ? shape.faces[index1] : shape.edges[index1];
   const el2 = type === "face" ? shape.faces[index2] : shape.edges[index2];
-  
   if (!el1 || !el2) return null;
   return measureDistanceBetween(el1, el2);
 };
